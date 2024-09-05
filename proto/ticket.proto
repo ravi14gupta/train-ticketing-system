@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package ticket;
+
+option go_package = "proto/";
+
+// User represents a user in the system.
+message User {
+    string first_name = 1;  // User's first name
+    string last_name = 2;   // User's last name
+    string email = 3;       // User's email address
+}
+
+// Ticket represents a ticket for the train journey.
+message Ticket {
+    string from = 1;        // Departure location
+    string to = 2;          // Destination location
+    User user = 3;          // User who purchased the ticket
+    double price = 4;       // Price of the ticket
+    string seat = 5;        // Seat allocated for the ticket
+}
+
+// PurchaseRequest represents a request to purchase a ticket.
+message PurchaseRequest {
+    User user = 1;          // User details for the ticket purchase
+}
+
+// PurchaseResponse represents the response after purchasing a ticket.
+message PurchaseResponse {
+    Ticket ticket = 1;      // The purchased ticket
+}
+
+// ReceiptRequest represents a request to retrieve a receipt.
+message ReceiptRequest {
+    string email = 1;       // Email of the user to retrieve the receipt for
+}
+
+// ReceiptResponse represents the response containing the ticket receipt.
+message ReceiptResponse {
+    Ticket ticket = 1;      // The ticket details for the receipt
+}
+
+// SectionRequest represents a request to get users in a specific section.
+message SectionRequest {
+    string section = 1;     // The section (e.g., "A" or "B") to retrieve users from
+}
+
+// SectionResponse represents the response containing tickets for a section.
+message SectionResponse {
+    repeated Ticket tickets = 1;  // List of tickets in the specified section
+}
+
+// RemoveUserRequest represents a request to remove a user.
+message RemoveUserRequest {
+    string email = 1;       // Email of the user to remove
+}
+
+// RemoveUserResponse represents the response after attempting to remove a user.
+message RemoveUserResponse {
+    bool success = 1;       // Indicates if the removal was successful
+}
+
+// ModifySeatRequest represents a request to modify a user's seat.
+message ModifySeatRequest {
+    string email = 1;       // Email of the user whose seat is to be modified
+    string new_seat = 2;    // New seat to assign to the user
+}
+
+// ModifySeatResponse represents the response after modifying a user's seat.
+message ModifySeatResponse {
+    Ticket ticket = 1;      // The updated ticket with the new seat
+}
+
+// TicketService defines the gRPC service for ticket operations.
+service TicketService {
+    rpc PurchaseTicket (PurchaseRequest) returns (PurchaseResponse); // RPC to purchase a ticket
+    rpc GetReceipt (ReceiptRequest) returns (ReceiptResponse);       // RPC to get a receipt
+    rpc GetSectionUsers (SectionRequest) returns (SectionResponse);   // RPC to get users in a section
+    rpc RemoveUser (RemoveUserRequest) returns (RemoveUserResponse);   // RPC to remove a user
+    rpc ModifySeat (ModifySeatRequest) returns (ModifySeatResponse);   // RPC to modify a user's seat
+}
