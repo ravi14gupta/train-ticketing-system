@@ -14,7 +14,7 @@ This project is a train ticket booking system implemented using **Golang** and *
 Before you begin, ensure you have the following:
 
 **1. Host Operating System**
-Ubuntu 20.04.6 LTS
+Ubuntu 20.04.6 LTS or Any Linux distribution OS
 
 **2. Go Programming Language**
 Version 1.23.0 or later 
