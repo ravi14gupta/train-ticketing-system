@@ -168,3 +168,43 @@ func TestPurchaseTicketSeatAllocation(t *testing.T) {
 	assert.Equal(t, 2, len(service.sectionSeats["A"]))
 	assert.Equal(t, 2, len(service.sectionSeats["B"]))
 }
+
+func TestPurchaseTicketTwiceSameUser(t *testing.T) {
+	service := NewService()
+
+	// User1 with same email, different First and Last Name
+	user1 := &pb.User{
+		FirstName: "Raju",
+		LastName:  "Gupta",
+		Email:     "Ravi.Gupta@example.com",
+	}
+	res1, err := service.PurchaseTicket(context.Background(), &pb.PurchaseRequest{User: user1})
+	assert.NoError(t, err)
+	assert.Equal(t, "Raju", res1.Ticket.User.FirstName)
+	assert.Equal(t, "A", res1.Ticket.Seat)
+	assert.Equal(t, 1, len(service.sectionSeats["A"]))
+	assert.Equal(t, 0, len(service.sectionSeats["B"]))
+
+	// Check the internal state
+	assert.Equal(t, user1.Email, service.sectionSeats["A"][0].User.Email)
+	assert.Equal(t, user1.FirstName, service.sectionSeats["A"][0].User.FirstName)
+	assert.Equal(t, user1.LastName, service.sectionSeats["A"][0].User.LastName)
+
+	// User2 with same email, different First and Last Name
+	user2 := &pb.User{
+		FirstName: "Ravi",
+		LastName:  "Gupta",
+		Email:     "Ravi.Gupta@example.com",
+	}
+	res1, err = service.PurchaseTicket(context.Background(), &pb.PurchaseRequest{User: user2})
+	assert.NoError(t, err)
+	assert.Equal(t, "Ravi", res1.Ticket.User.FirstName)
+	assert.Equal(t, "B", res1.Ticket.Seat)
+	assert.Equal(t, 0, len(service.sectionSeats["A"]))
+	assert.Equal(t, 1, len(service.sectionSeats["B"]))
+
+	// Check the internal state
+	assert.Equal(t, user2.Email, service.sectionSeats["B"][0].User.Email)
+	assert.Equal(t, user2.FirstName, service.sectionSeats["B"][0].User.FirstName)
+	assert.Equal(t, user2.LastName, service.sectionSeats["B"][0].User.LastName)
+}

@@ -98,8 +98,10 @@ To run the unit tests, use the following command:
 go test ./...
 ```
 ## Limitations
-- **Multiple Tickets For Same User:**
+- **Multiple Tickets For Same User**
   Currently, it overwrites the existing ticket, if a user with the same email purchases a ticket multiple times.
+- **Source-Destination And Ticket Cost is Fixed**
+  Currently, Source Location is fixed as "London" and Target Destination as "France" along with Ticket cost as $20.
 
 ## Future Enhancements
 Here are some potential future enhancements that could be implemented:
